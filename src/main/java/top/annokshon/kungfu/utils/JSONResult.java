@@ -52,7 +52,7 @@ public class JSONResult {
 		return new JSONResult(data);
 	}
 	public static JSONResult ok(){
-		return new JSONResult(null);
+		return new JSONResult("");
 	}
 	//status = 500
 	public static JSONResult errorMsg(String msg){
