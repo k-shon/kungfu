@@ -2,23 +2,23 @@ package top.annokshon.kungfu.mapper;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
-import top.annokshon.kungfu.entity.Apply;
+import top.annokshon.kungfu.entity.DojoApply;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ApplyMapper extends JpaRepository<Apply,Integer> {
+public interface DojoApplyMapper extends JpaRepository<DojoApply,Integer> {
     @Override
-    List<Apply> findAll();
+    List<DojoApply> findAll();
 
     @Override
-    List<Apply> findAll(Sort sort);
+    List<DojoApply> findAll(Sort sort);
 
     @Override
-    <S extends Apply> S save(S s);
+    <S extends DojoApply> S save(S s);
 
     @Override
-    Optional<Apply> findById(Integer integer);
+    Optional<DojoApply> findById(Integer integer);
 
     @Override
     boolean existsById(Integer integer);
@@ -27,5 +27,5 @@ public interface ApplyMapper extends JpaRepository<Apply,Integer> {
     void deleteById(Integer integer);
 
     @Override
-    void delete(Apply apply);
+    void delete(DojoApply apply);
 }

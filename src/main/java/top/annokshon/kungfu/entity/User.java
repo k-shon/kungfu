@@ -1,65 +1,78 @@
-package top.annokshon.kungfu.entity;
+﻿package top.annokshon.kungfu.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 
 /*
  * 用户登录信息
  */
 @Entity
-@Table(name = "tb_user")
-public class User {
-
+@Table(name = "kf_user")
+@Data
+public class User implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "kf_id")
 	private int id;
-	@Column(length = 20)
+
+	@Column(length = 100,name = "kf_username")
 	private String username;  //用户名
-	@Column(length = 30)
+
+	@Column(length = 100,name = "kf_password")
 	private String password;  //密码
-	@ManyToOne
-	private Person person;   //个人信息
+
+	@ManyToMany
+	private List<Role> roles;  //用户对应的角色
+
+	@Column(length = 100,name = "kf_state")
+	private int state;  //用户账号状态(1:激活，0)
+
 	@DateTimeFormat(pattern = "yy-MM-dd hh:mm:ss")
-	private Date createtime;
-	
-	public User(){}
-	public User(String username,String password){
-		this.username = username;
-		this.password = password;
-		this.createtime = new Date();
+	@Column(name = "kf_register_time")
+	private Date registerTime;  //注册时间
+
+	@DateTimeFormat(pattern = "yy-MM-dd hh:mm:ss")
+	@Column(name = "kf_last_login_time")
+	private Date lastLoginTime;  //最后一次登陆时间
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+		List<Role> roles = this.getRoles();
+		for (Role role : roles) {
+			auths.add(new SimpleGrantedAuthority(role.getName()));
+		}
+		return auths;
 	}
-	
-	public int getId() {
-		return id;
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
 	}
-	public String getUsername() {
-		return username;
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public Person getPerson() {
-		return person;
-	}
-	public void setPerson(Person person) {
-		this.person = person;
-	}
-	public Date getCreatetime() {
-		return createtime;
-	}
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 }

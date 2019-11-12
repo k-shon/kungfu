@@ -5,27 +5,25 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import top.annokshon.kungfu.entity.User;
+@Repository
+public interface UserMapper {
 
-public interface UserMapper extends JpaRepository<User,Integer> {
-	@Override
+	User findByUsername(String name);
+
 	List<User> findAll();
 
-	@Override
 	List<User> findAll(Sort sort);
 
-	@Override
-	<S extends User> S save(S s);
+	//保存用户信息并返回id
+	int save(User user);
 
-	@Override
 	Optional<User> findById(Integer integer);
 
-	@Override
 	boolean existsById(Integer integer);
 
-	@Override
 	void deleteById(Integer integer);
 
-	@Override
 	void delete(User user);
 }

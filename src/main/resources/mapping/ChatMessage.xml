@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.annokshon.kungfu.mapper.chat.ChatMessageMapper" >
+    <resultMap id="ChatMessageResult" type="ChatMessage">
+        <result column="kf_id" property="id" />
+        <result column="kf_context" property="context" />
+        <result column="kf_status" property="status" />
+        <result column="kf_send_time" property="sendTime" />
+        <association property="fromPerson" column="kf_from_person_id"
+                     select="top.annokshon.kungfu.mapper.PersonMapper.findById">
+        </association>
+        <association property="toPerson" column="kf_to_person_id"
+                     select="top.annokshon.kungfu.mapper.PersonMapper.findById">
+        </association>
+    </resultMap>
+    <select id="getChatMessage" resultMap="ChatMessageResult" parameterType="int">
+        select  * from  kf_chat_message where kf_to_person_id = #{id}
+    </select>
+    <select id="findByPidAndFid" resultMap="ChatMessageResult">
+        select  * from  kf_chat_message
+          where
+            (kf_from_person_id = #{toPersonId} and kf_to_person_id=#{fromPersonId})
+          or
+            (kf_from_person_id = #{fromPersonId} and kf_to_person_id=#{toPersonId})
+    </select>
+    <select id="getUnReadCount" resultType="int">
+        select  count(*) from  kf_chat_message
+          where
+              kf_from_person_id = #{friend.id}
+          and kf_to_person_id=#{person.id}
+          and kf_status = 0
+    </select>
+    <update id="setRead">
+        update kf_chat_message set kf_status = 1
+          where kf_from_person_id = #{toPersonId}
+          and kf_to_person_id = #{fromPersonId}
+    </update>
+    <insert id="save" parameterType="ChatMessage">
+        insert into kf_chat_message(
+          kf_context,
+          kf_status,
+          kf_send_time,
+          kf_from_person_id,
+          kf_to_person_id
+        )
+          values(
+          #{context},
+          #{status},
+          #{sendTime},
+          #{fromPerson.id},
+          #{toPerson.id}
+          )
+    </insert>
+</mapper>

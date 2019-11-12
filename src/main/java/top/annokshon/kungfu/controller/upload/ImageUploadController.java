@@ -26,12 +26,9 @@ import java.util.Date;
 @RequestMapping("imgUpload")
 public class ImageUploadController {
 
-    private  final String URL = "http://localhost:1111/";
-    private Log log = LogFactory.getLog("ImageUploadController");
+    private  final String URL = "http://localhost/";
+    private Log log = LogFactory.getLog(ImageUploadController.class);
 
-    @Autowired
-    private PictureMapper pictureMapper;
-    @Transactional
     @PostMapping("/single")
     public JSONResult singleImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws FileNotFoundException {  //参数名需与前端文件标签名一样
         //获取项目classes/static的地址
@@ -39,9 +36,7 @@ public class ImageUploadController {
         String fileName = file.getOriginalFilename();  //获取文件名
         //图片访问URI(即除了协议、地址和端口号的URL)
         String url_path = "image"+File.separator+fileName;
-        log.info("图片访问uri："+url_path);
         String savePath = path+File.separator+url_path;  //图片保存路径
-        log.info("图片保存地址："+savePath);
         File saveFile = new File(savePath);
         if (!saveFile.exists()){
             saveFile.mkdirs();
@@ -51,9 +46,6 @@ public class ImageUploadController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //将图片信息存储到数据库
-        Picture picture = new Picture(file.getName(),URL+url_path,savePath,new Date());
-        pictureMapper.save(picture);
         //返回图片访问地址
         log.info("访问URL："+URL+url_path);
         return JSONResult.ok(URL+url_path);

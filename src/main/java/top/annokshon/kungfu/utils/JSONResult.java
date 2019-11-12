@@ -49,6 +49,7 @@ public class JSONResult {
 	}
 	//status = 200
 	public static JSONResult ok(Object data){
+		System.out.println("返回数据："+data);
 		return new JSONResult(data);
 	}
 	public static JSONResult ok(){

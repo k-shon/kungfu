@@ -1,0 +1,28 @@
+server:
+  port: 80
+  tomcat:
+    max-http-post-size: 500MB
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/kungfu?useCharactorEncoding=utf-8&useSSL=false&serverTimezone=UTC
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+jpa:
+    show-sql: true
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: top.annokshon.kungfu.entity #类别名，有这个注解，在映射文件可以直接用类型代替全限定名

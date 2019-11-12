@@ -1,5 +1,6 @@
 package top.annokshon.kungfu.entity;
 
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -9,79 +10,35 @@ import java.util.Date;
  * 个人信息
  */
 @Entity
-@Table(name = "tb_person")
+@Table(name = "kf_person")
+@Data
 public class Person {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "kf_id")
 	private int id;
-	@ManyToOne
-	private Picture picture;  //头像
-	@Column(length = 30)
-	private String realName;  //真实姓名
-	@Column(length = 10)
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "kf_user_id")
+	private User user;  //用户信息
+	@Column(length = 100,name = "kf_nickname")
+	private String nickname;  //真实姓名
+	@Column(length = 300,name = "kf_avatar")
+	private String avatar;  //头像地址
+	@Column(length = 100,name = "kf_sex")
 	private String sex; //性别
-	@Column(length = 200)
+	@Column(length = 100,name = "kf_age")
+	private String age; //年龄
+	@Column(length = 100,name = "kf_email")
 	private String email; //邮箱
-	@Column(length = 20)
-	private String phone;  //手机
-	@Column(length = 30)
+	@Column(length = 100,name = "kf_mobile_number")
+	private String mobileNumber;  //移动电话号码
+	@Column(length = 100,name = "kf_idcard")
 	private String idcard; //身份证
+	@Column(length = 100,name = "kf_state")
+	private String state; //状态
 	@DateTimeFormat(pattern = "yy-MM-dd hh:mm:ss")
-	private Date createtime;  //创建时间
+	@Column(name = "kf_modify_time")
+	private Date modifyTime;  //修改时间
 
-	public Person(){}
-	public Person(String name,String idcard){
-		this.realName = name;
-		this.idcard = idcard;
-	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public Picture getPicture() {
-		return picture;
-	}
-	public void setPicture(Picture picture) {
-		this.picture = picture;
-	}
-	public String getRealName() {
-		return realName;
-	}
-	public void setRealName(String realName) {
-		this.realName = realName;
-	}
-	public String getSex() {
-		return sex;
-	}
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	public String getIdcard() {
-		return idcard;
-	}
-	public void setIdcard(String idcard) {
-		this.idcard = idcard;
-	}
-	public Date getCreatetime() {
-		return createtime;
-	}
-	public void setCreatetime(Date createtime) {
-		this.createtime = createtime;
-	}
-	
 }

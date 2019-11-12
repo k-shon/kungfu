@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.annokshon.kungfu.mapper.UserMapper">
+    <resultMap id="UserResult" type="User">
+        <result column="kf_id" property="id" />
+        <result column="kf_username" property="username" />
+        <result column="kf_password" property="password" />
+        <result column="kf_state" property="state" />
+        <result column="kf_register_time" property="registerTime" javaType="java.util.Date"/>
+        <result column="kf_last_login_time" property="lastLoginTime" javaType="java.util.Date"/>
+        <collection property="roles" column="kf_id"  select="top.annokshon.kungfu.mapper.RoleMapper.getRoleByUser">
+        </collection>
+    </resultMap>
+    <insert id="save" parameterType="User" keyProperty="id" useGeneratedKeys="true" keyColumn="kf_id">
+        insert into kf_user(
+          kf_username,
+          kf_password,
+          kf_state,
+          kf_register_time,
+          kf_last_login_time
+        )
+        values(
+          #{username},
+          #{password},
+          #{state},
+          #{registerTime},
+          #{lastLoginTime}
+        )
+    </insert>
+    <select id="getUserById" resultMap="UserResult">
+        select * from kf_user where kf_id=#{id}
+    </select>
+    <select id="findByUsername" resultMap="UserResult">
+        select * from kf_user where kf_username=#{name}
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.annokshon.kungfu.mapper.PersonMapper">
+    <resultMap id="PersonResult" type="Person">
+        <result column="kf_id" property="id" />
+        <result column="kf_nickname" property="nickname" />
+        <result column="kf_avatar" property="avatar" />
+        <result column="kf_sex" property="sex" />
+        <result column="kf_state" property="state" />
+        <result column="kf_age" property="age" />
+        <result column="kf_email" property="email" />
+        <result column="kf_mobile_number" property="mobileNumber" />
+        <result column="kf_idcard" property="idcard" />
+        <result column="kf_modify_time" property="modifyTime" />
+        <association property="user" column="kf_user_id"
+                     select="top.annokshon.kungfu.mapper.UserMapper.getUserById">
+        </association>
+    </resultMap>
+    <insert id="save" parameterType="Person">
+        insert into kf_person(
+          kf_nickname,
+          kf_avatar,
+          kf_sex,
+          kf_state,
+          kf_age,
+          kf_email,
+          kf_mobile_number,
+          kf_modify_time,
+          kf_user_id
+        )
+        values(
+          #{nickname},
+          #{avatar},
+          #{sex},
+          #{state},
+          #{age},
+          #{email},
+          #{mobileNumber},
+          #{modifyTime},
+          #{user.id}
+        )
+    </insert>
+    <update id="update">
+        update kf_person set
+            kf_nickname=#{nickname},
+            kf_avatar=#{avatar},
+            kf_sex=#{sex},
+            kf_state = #{state},
+            kf_age = #{age},
+             kf_email =#{email},
+             kf_mobile_number =  #{mobileNumber},
+            kf_modify_time =  #{modifyTime}
+          where kf_id = #{id}
+    </update>
+    <select id="findById" resultMap="PersonResult">
+        select * from kf_person where kf_id=#{id}
+    </select>
+    <select id="findByUser" resultMap="PersonResult">
+        select * from kf_person where kf_user_id=#{id}
+    </select>
+</mapper>

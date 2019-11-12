@@ -1,47 +1,74 @@
 package top.annokshon.kungfu.controller.admin;
 
-import io.lettuce.core.dynamic.annotation.Param;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import top.annokshon.kungfu.entity.Dojo;
-import top.annokshon.kungfu.entity.Person;
-import top.annokshon.kungfu.entity.Picture;
-import top.annokshon.kungfu.mapper.DojoMapper;
 import top.annokshon.kungfu.service.DojoService;
 import top.annokshon.kungfu.utils.JSONResult;
 
-import java.util.Date;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("dojo")
 public class DojoController {
+    private Log log = LogFactory.getLog(DojoController.class);
     @Autowired
     private DojoService dojoService;
 
-    @GetMapping("/getDojo")
-    public JSONResult getDojo(@RequestParam("id") int id){
-        return JSONResult.ok(dojoService.findById(id));
-    }
-    @GetMapping("/save")
-    public void save(){
-        Dojo dojo  = new Dojo();
-        dojo.setName("太极拳");
-        dojo.setPerson(new Person("kshon","1654313216545"));
-        dojoService.save(dojo);
-    }
     //武馆入驻
-    @PostMapping("/register")
-    public JSONResult register(Dojo dojo, @RequestParam("file")MultipartFile file){
-        //设置武馆状态为冻结
-        dojo.setStatus(0);
-        dojo.setCreatetime(new Date());
-        //上传头像
-        Picture picture = dojoService.uploadSingleImage(dojo,file);
-        dojo.setPicture(picture);
-        //保存武馆信息
-        dojoService.save(dojo);
+    @RequestMapping("/settle")
+    public JSONResult settleDojo(Dojo dojo){
+        log.info("武馆入驻："+dojo.toString());
+        try {
+            dojo.setState(1); //入驻状态
+            dojoService.save(dojo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JSONResult.errorMsg(e.getMessage());
+        }
+        return JSONResult.ok();
+    }
+    //查询全部武馆
+    @RequestMapping("/findAll")
+    public JSONResult findAll(){
+        log.info("查询所有武馆信息。。");
+        return JSONResult.ok(dojoService.findAll());
+    }
+    //根据id获取武馆
+    @RequestMapping("/{dojoId}")
+    public JSONResult findById(@PathVariable("dojoId") int id){
+        Dojo dojo = dojoService.findById(id);
         return JSONResult.ok(dojo);
+    }
+
+    //根据价格降序排序
+    @RequestMapping("/sortByPrice")
+    public JSONResult findByPriceSortDesc(@RequestParam("sort")int sort){
+        return JSONResult.ok(dojoService.findByPriceSort(sort));
+    }
+
+    //根据距离由近到远排序
+    @RequestMapping("/sortByDistanceASC")
+    public JSONResult sortByDistanceASC(@RequestParam("latitude")String latitude,@RequestParam("longitude")String longitude){
+        List<Dojo> dojos = dojoService.sortByDistenceASC(latitude,longitude);
+        for(Dojo d:dojos){
+            System.out.println("武馆【"+d.getDojoName()+"】的geoCode为【"+d.getGeoCode()+"】");
+        }
+        return JSONResult.ok(dojos);
+    }
+    //更新武馆
+    @RequestMapping("/update")
+    public JSONResult update(@RequestBody Dojo dojo){
+        log.info("更新武馆："+dojo.toString());
+        try {
+            dojoService.updateDojo(dojo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return JSONResult.errorMsg(e.getMessage());
+        }
+        return JSONResult.ok();
     }
 }

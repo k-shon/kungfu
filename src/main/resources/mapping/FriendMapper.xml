@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.annokshon.kungfu.mapper.chat.FriendMapper" >
+    <resultMap id="FriendResult" type="Friend">
+        <result column="kf_id" property="id" />
+        <result column="kf_name" property="name" />
+        <association property="person" column="kf_person_id"
+                     select="top.annokshon.kungfu.mapper.PersonMapper.findById">
+        </association>
+        <association property="friend" column="kf_friend_id"
+                     select="top.annokshon.kungfu.mapper.PersonMapper.findById">
+        </association>
+    </resultMap>
+    <select id="getFriend" resultMap="FriendResult" parameterType="int">
+        select  * from  kf_friend where kf_person_id = #{id}
+    </select>
+    <insert id="save" parameterType="Friend">
+        insert into kf_friend(kf_name,kf_friend_id,kf_person_id) values(#{name},#{friend.id},#{person.id})
+    </insert>
+</mapper>
