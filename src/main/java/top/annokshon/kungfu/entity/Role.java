@@ -20,4 +20,6 @@ public class Role {
 
     @Column(length = 100,name = "kf_name")
     private String name;  //角色名称
+
+
 }

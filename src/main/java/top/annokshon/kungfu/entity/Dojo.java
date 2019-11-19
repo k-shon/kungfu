@@ -47,4 +47,6 @@ public class Dojo {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "kf_person_id")
 	private Person person;  //武馆负责人
+
+
 }

@@ -1,4 +1,4 @@
-﻿package top.annokshon.kungfu.entity;
+package top.annokshon.kungfu.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
@@ -75,4 +75,5 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
 }
